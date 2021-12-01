@@ -103,8 +103,9 @@ walkaddr(pagetable_t pagetable, uint64 va)
   if(va >= MAXVA)
     return 0;
 
-  pte = walk(pagetable, va, 0);
-  if(pte == 0 || (*pte & PTE_V) == 0){
+  if((pte = walk(pagetable, va, 0)) == 0)
+    return 0;
+  if((*pte & PTE_V) == 0){
     if(va >= p->sz || va <= PGROUNDDOWN(p->trapframe->sp)){
       return 0;
     }
